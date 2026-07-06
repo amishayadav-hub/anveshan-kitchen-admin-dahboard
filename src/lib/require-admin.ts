@@ -1,5 +1,5 @@
 import "server-only";
-import { adminAuth } from "./firebase-admin";
+import { getAdminAuth, isAdminConfigured } from "./firebase-admin";
 
 // Comma-separated allowlist fallback (e.g. ADMIN_EMAILS="a@x.com,b@y.com").
 // Primary gate is the `admin` custom claim; this allowlist lets you bootstrap
@@ -24,12 +24,21 @@ export type AdminCheck =
  * the ADMIN_EMAILS allowlist). Use at the top of every privileged API route.
  */
 export async function requireAdmin(req: Request): Promise<AdminCheck> {
+  if (!isAdminConfigured()) {
+    return {
+      ok: false,
+      status: 503,
+      error:
+        "Admin SDK not configured — set FIREBASE_SERVICE_ACCOUNT in the environment.",
+    };
+  }
+
   const header = req.headers.get("authorization") || "";
   const token = header.startsWith("Bearer ") ? header.slice(7).trim() : "";
   if (!token) return { ok: false, status: 401, error: "Missing bearer token" };
 
   try {
-    const decoded = await adminAuth.verifyIdToken(token);
+    const decoded = await getAdminAuth().verifyIdToken(token);
     const email = decoded.email ?? null;
     const isAdmin =
       decoded.admin === true ||
