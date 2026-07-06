@@ -14,7 +14,10 @@ export interface NavItem {
 export const NAV: NavItem[] = [
   { href: "/", label: "Overview", blurb: "Dashboard home and health.", icon: "overview" },
   { href: "/analytics", label: "Click Analytics", blurb: "Button & link clicks, desktop vs mobile.", icon: "analytics" },
-  { href: "/products", label: "Products", blurb: "The hero — manage sellable products.", icon: "products" },
+  // Products section hidden from nav (kept as code + /api/products routes so it
+  // can be restored by re-adding this entry). The Recipes editor still uses the
+  // products API for its product-id hint.
+  // { href: "/products", label: "Products", blurb: "The hero — manage sellable products.", icon: "products" },
   { href: "/recipes", label: "Recipes", blurb: "Create, edit and delete recipes.", icon: "recipes" },
   { href: "/submissions", label: "Submissions", blurb: "Moderate community recipe submissions.", icon: "submissions" },
   { href: "/community", label: "Real Peeps", blurb: "Manage the community feed.", icon: "community" },

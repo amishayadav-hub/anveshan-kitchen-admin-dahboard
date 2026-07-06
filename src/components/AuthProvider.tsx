@@ -45,6 +45,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    // No Firebase config (env vars not set) → nothing to listen to; stop loading
+    // and treat as signed-out so the app renders (login will show a clear error).
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
     const unsub = onAuthStateChanged(auth, async (u) => {
       setUser(u);
       if (u) {
@@ -60,21 +66,26 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     return unsub;
   }, []);
 
+  function ensureAuth() {
+    if (!auth) throw new Error("Firebase is not configured (missing NEXT_PUBLIC_FIREBASE_* env vars).");
+    return auth;
+  }
+
   async function login(email: string, password: string) {
-    await signInWithEmailAndPassword(auth, email, password);
+    await signInWithEmailAndPassword(ensureAuth(), email, password);
   }
 
   async function loginWithGoogle() {
-    await signInWithPopup(auth, new GoogleAuthProvider());
+    await signInWithPopup(ensureAuth(), new GoogleAuthProvider());
   }
 
   async function logout() {
-    await signOut(auth);
+    if (auth) await signOut(auth);
   }
 
   const authedFetch = useCallback(
     async (input: string, init: RequestInit = {}) => {
-      const current = auth.currentUser;
+      const current = auth?.currentUser;
       const token = current ? await current.getIdToken() : "";
       const headers = new Headers(init.headers);
       if (token) headers.set("Authorization", `Bearer ${token}`);
