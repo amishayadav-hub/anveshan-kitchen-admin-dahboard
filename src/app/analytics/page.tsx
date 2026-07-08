@@ -165,8 +165,8 @@ function BarRow({
         {rawKey && <div className="truncate font-mono text-[11px] text-neutral-400">{rawKey}</div>}
         <div className="mt-1.5 h-2.5 w-full overflow-hidden rounded-full bg-neutral-200">
           <div className="flex h-full rounded-full" style={{ width: `${pct}%` }}>
-            <div className="h-full bg-amber-400" style={{ width: `${mobilePct}%` }} title={`${mobile} mobile`} />
-            <div className="h-full flex-1 bg-emerald-600" title={`${desktop} desktop`} />
+            <div className="h-full bg-emerald-600" style={{ width: `${mobilePct}%` }} title={`${mobile} mobile`} />
+            <div className="h-full flex-1 bg-amber-400" title={`${desktop} desktop`} />
           </div>
         </div>
       </div>
@@ -200,13 +200,13 @@ function DeviceSplit({ desktop, mobile }: { desktop: number; mobile: number }) {
       <div className="mb-2 flex items-center justify-between gap-3">
         <span className="text-xs font-semibold uppercase tracking-wide text-neutral-600">Device split</span>
         <span className="flex gap-3 text-xs text-neutral-600">
-          <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-emerald-600" /> Desktop {Math.round(dPct)}%</span>
-          <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-amber-400" /> Mobile {Math.round(mPct)}%</span>
+          <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-amber-400" /> Desktop {Math.round(dPct)}%</span>
+          <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-emerald-600" /> Mobile {Math.round(mPct)}%</span>
         </span>
       </div>
       <div className="flex h-3 w-full overflow-hidden rounded-full bg-neutral-200">
-        <div className="h-full bg-emerald-600" style={{ width: `${dPct}%` }} />
-        <div className="h-full bg-amber-400" style={{ width: `${mPct}%` }} />
+        <div className="h-full bg-amber-400" style={{ width: `${dPct}%` }} />
+        <div className="h-full bg-emerald-600" style={{ width: `${mPct}%` }} />
       </div>
       {total === 0 && <p className="mt-2 text-xs text-neutral-400">No device data yet.</p>}
     </div>
@@ -415,8 +415,8 @@ export default function AnalyticsPage() {
         <>
           <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Tile label="Total clicks" value={total.toLocaleString()} />
-            <Tile label="Desktop" value={desktop.toLocaleString()} accent="emerald" />
-            <Tile label="Mobile" value={mobile.toLocaleString()} accent="amber" />
+            <Tile label="Desktop" value={desktop.toLocaleString()} accent="amber" />
+            <Tile label="Mobile" value={mobile.toLocaleString()} accent="emerald" />
             <Tile label="Tracked elements" value={rows.length.toLocaleString()} />
           </div>
 
