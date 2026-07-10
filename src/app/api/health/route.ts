@@ -1,12 +1,23 @@
-import { isAdminConfigured } from "@/lib/firebase-admin";
+import { isAdminConfigured, getAdminDb } from "@/lib/firebase-admin";
 
 export const runtime = "nodejs";
 
-// Lightweight, unauthenticated status probe so the dashboard can warn when the
-// Admin SDK service account hasn't been configured yet. Returns no secrets.
+// TEMP diagnostic: also probe a Firestore read (with preferRest) so we can
+// confirm the gRPC-hang fix works on Vercel without needing an auth token.
 export async function GET() {
-  return Response.json({
-    ok: true,
-    adminConfigured: isAdminConfigured(),
-  });
+  const out: Record<string, unknown> = { ok: true, adminConfigured: isAdminConfigured() };
+  if (isAdminConfigured()) {
+    const started = Date.now();
+    try {
+      const snap = await getAdminDb().collection("clicks").count().get();
+      out.firestore = "ok";
+      out.clicksCount = snap.data().count;
+      out.readMs = Date.now() - started;
+    } catch (e) {
+      out.firestore = "FAILED";
+      out.firestoreError = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
+      out.readMs = Date.now() - started;
+    }
+  }
+  return Response.json(out);
 }
