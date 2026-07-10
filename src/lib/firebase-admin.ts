@@ -47,8 +47,23 @@ function getApp(): App {
   return cached;
 }
 
+// Cache the Firestore instance and force REST transport. firebase-admin's
+// default gRPC transport frequently hangs inside Vercel serverless functions
+// (the request never resolves → the function times out → an empty response →
+// "Unexpected end of JSON input" on the client). preferRest uses plain HTTP,
+// which works reliably in serverless. settings() may only be called once, so we
+// cache the instance.
+let cachedDb: Firestore | null = null;
 export function getAdminDb(): Firestore {
-  return getFirestore(getApp());
+  if (cachedDb) return cachedDb;
+  const db = getFirestore(getApp());
+  try {
+    db.settings({ preferRest: true });
+  } catch {
+    // already initialized/used — ignore
+  }
+  cachedDb = db;
+  return cachedDb;
 }
 
 export function getAdminAuth(): Auth {
