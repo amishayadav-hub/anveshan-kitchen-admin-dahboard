@@ -20,7 +20,8 @@ export type IconName =
   | "share"
   | "eye"
   | "menu"
-  | "close";
+  | "close"
+  | "campaign";
 
 const PATHS: Record<IconName, React.ReactNode> = {
   overview: (
@@ -115,6 +116,13 @@ const PATHS: Record<IconName, React.ReactNode> = {
     <>
       <line x1="6" y1="6" x2="18" y2="18" />
       <line x1="18" y1="6" x2="6" y2="18" />
+    </>
+  ),
+  campaign: (
+    <>
+      <path d="M3 11v2a1 1 0 0 0 1 1h3l4 4V6L7 10H4a1 1 0 0 0-1 1z" />
+      <path d="M15 8a4 4 0 0 1 0 8" />
+      <path d="M18.5 5.5a8 8 0 0 1 0 13" />
     </>
   ),
   share: (
